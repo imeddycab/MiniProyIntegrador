@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema — Iniciar Sesión</title>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #1a2540;
+  --bg: #f0f4fb;
+  --blue: #4a6fa5;
+  --blue-pale: #dce8f7;
+  --muted: #7a8baa;
+  --line: #d4dff0;
+  --input-bg: #f7f9fd;
+  --white: #ffffff;
+}
+
+body {
+  background-color: var(--bg);
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  position: relative;
+  background: var(--white);
+  border: 1px solid var(--line);
+  padding: 44px 52px 40px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 2px 4px rgba(74,111,165,0.06), 0 8px 32px rgba(74,111,165,0.09);
+  animation: rise 0.5s ease both;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--blue);
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: var(--line);
+  margin: 18px 0 24px;
+}
+
+.field { margin-bottom: 18px; }
+
+label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: bold;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+input {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--input-bg);
+  border: 1px solid var(--line);
+  font-family: Arial, sans-serif;
+  font-size: 0.88rem;
+  color: var(--ink);
+  outline: none;
+  border-radius: 3px;
+}
+
+input:focus {
+  border-color: var(--blue);
+  background: var(--white);
+}
+
+button {
+  width: 100%;
+  margin-top: 8px;
+  padding: 11px 20px;
+  background: var(--blue);
+  border: none;
+  color: var(--white);
+  font-size: 0.85rem;
+  font-weight: bold;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+button:hover { background: #3a5f95; }
+
+.register-link{
+  margin-top:16px;
+  font-size:0.8rem;
+  color:var(--muted);
+  text-align:center;
+}
+
+.register-link a{
+  color:var(--blue);
+  text-decoration:none;
+  font-weight:bold;
+}
+
+.register-link a:hover{
+  text-decoration:underline;
+}
+
+.footer-note {
+  margin-top: 24px;
+  font-size: 0.72rem;
+  color: #b0bdd4;
+  text-align: center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>Iniciar Sesión</h2>
+<p class="subtitle">Ingrese sus credenciales para continuar</p>
+
+<div class="divider"></div>
+
+<form method="POST">
+{% csrf_token %}
+
+<div class="field">
+<label for="username">Usuario</label>
+<input type="text" id="username" name="username" placeholder="Ingrese su usuario">
+</div>
+
+<div class="field">
+<label for="password">Contraseña</label>
+<input type="password" id="password" name="password" placeholder="••••••••">
+</div>
+
+<button type="submit">Entrar al sistema</button>
+
+</form>
+
+<div class="register-link">
+¿No tienes cuenta? <a href="/registro/">Crear cuenta</a>
+</div>
+
+<p class="footer-note">© 2026 Sistema Corporativo — Acceso restringido</p>
+
+</div>
+
+</body>
+</html>
