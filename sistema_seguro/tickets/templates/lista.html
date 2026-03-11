@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Tickets - Sistema</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f0f4fb;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background-color: #1a2540;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar h1 {
+            font-size: 1.5rem;
+        }
+
+        .navbar a, .logout-btn {
+            color: white;
+            text-decoration: none;
+            margin-left: 1.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar a:hover {
+            background-color: #4a6fa5;
+        }
+
+        .logout-btn {
+            background-color: #ef4444;
+            border: none;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background-color: #dc2626;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        h2 {
+            color: #1a2540;
+            margin-bottom: 1.5rem;
+        }
+
+        .tickets-section {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 4px rgba(74, 111, 165, 0.06);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th {
+            background-color: #4a6fa5;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #d4dff0;
+        }
+
+        table tr:hover {
+            background-color: #f9fafb;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .badge.abierto {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge.en_progreso {
+            background-color: #dbeafe;
+            color: #0c4a6e;
+        }
+
+        .badge.cerrado {
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 2rem;
+            color: #7a8baa;
+        }
+
+        .admin-notice {
+            background-color: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+        }
+
+        .admin-notice strong {
+            color: #92400e;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>🎫 Tickets</h1>
+        <div class="nav-links">
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            {% if user.profile.rol.nombre == 'admin' %}
+                <a href="{% url 'admin_panel' %}">Panel Admin</a>
+            {% endif %}
+            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Gestión de Tickets</h2>
+
+        {% if user.profile.rol.nombre == 'admin' %}
+            <div class="admin-notice">
+                <strong>👨‍💼 Modo Administrador:</strong> Estás viendo TODOS los tickets del sistema.
+            </div>
+        {% endif %}
+
+        <div class="tickets-section">
+            {% if tickets %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Título</th>
+                            <th>Descripción</th>
+                            <th>Usuario</th>
+                            <th>Estado</th>
+                            <th>Fecha de Creación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ticket in tickets %}
+                        <tr>
+                            <td>#{{ ticket.id }}</td>
+                            <td><strong>{{ ticket.titulo }}</strong></td>
+                            <td>{{ ticket.descripcion|truncatewords:15 }}</td>
+                            <td>{{ ticket.usuario.username }}</td>
+                            <td>
+                                <span class="badge {{ ticket.estado }}">
+                                    {{ ticket.get_estado_display }}
+                                </span>
+                            </td>
+                            <td>{{ ticket.creado_en|date:"d/m/Y H:i" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty-message">
+                    <p>📭 No hay tickets disponibles.</p>
+                    {% if user.profile.rol.nombre == 'admin' %}
+                        <p>Como administrador, cuando haya tickets en el sistema aparecerán aquí.</p>
+                    {% else %}
+                        <p>Cuando tengas tickets asignados, aparecerán aquí.</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

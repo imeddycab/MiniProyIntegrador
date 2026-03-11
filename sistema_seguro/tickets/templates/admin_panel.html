@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administrativo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f0f4fb;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background-color: #1a2540;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar h1 {
+            font-size: 1.5rem;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 2rem;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar a:hover {
+            background-color: #4a6fa5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(74, 111, 165, 0.06);
+            border-top: 3px solid #4a6fa5;
+        }
+
+        .card h3 {
+            color: #7a8baa;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .card .number {
+            font-size: 2.5rem;
+            color: #1a2540;
+            font-weight: bold;
+        }
+
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(74, 111, 165, 0.06);
+        }
+
+        .section h2 {
+            color: #1a2540;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #4a6fa5;
+            padding-bottom: 0.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th {
+            background-color: #4a6fa5;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #d4dff0;
+        }
+
+        table tr:hover {
+            background-color: #f9fafb;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .badge.abierto {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge.en_progreso {
+            background-color: #dbeafe;
+            color: #0c4a6e;
+        }
+
+        .badge.cerrado {
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+
+        .logout-btn {
+            background-color: #ef4444;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: #dc2626;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>🔐 Panel Administrativo</h1>
+        <div class="nav-links">
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'lista' %}">Tickets</a>
+            <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 style="color: #1a2540; margin-bottom: 1.5rem;">Bienvenido, {{ user.username }}</h2>
+
+        <!-- Dashboard Cards -->
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>Total de Usuarios</h3>
+                <div class="number">{{ total_usuarios }}</div>
+            </div>
+            <div class="card">
+                <h3>Total de Tickets</h3>
+                <div class="number">{{ total_tickets }}</div>
+            </div>
+            <div class="card">
+                <h3>Tickets Abiertos</h3>
+                <div class="number">{{ tickets_abiertos }}</div>
+            </div>
+            <div class="card">
+                <h3>Tickets Cerrados</h3>
+                <div class="number">{{ tickets_cerrados }}</div>
+            </div>
+        </div>
+
+        <!-- Usuarios Section -->
+        <div class="section">
+            <h2>Usuarios del Sistema</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Fecha de Registro</th>
+                        <th>Activo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios %}
+                    <tr>
+                        <td>{{ usuario.username }}</td>
+                        <td>{{ usuario.email }}</td>
+                        <td>{{ usuario.date_joined|date:"d/m/Y" }}</td>
+                        <td>
+                            {% if usuario.is_active %}
+                                <span class="badge abierto">Sí</span>
+                            {% else %}
+                                <span class="badge cerrado">No</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: #7a8baa;">No hay usuarios</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Tickets Section -->
+        <div class="section">
+            <h2>Últimos Tickets</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Usuario</th>
+                        <th>Estado</th>
+                        <th>Creado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in tickets %}
+                    <tr>
+                        <td>{{ ticket.titulo }}</td>
+                        <td>{{ ticket.usuario.username }}</td>
+                        <td>
+                            <span class="badge {{ ticket.estado }}">
+                                {{ ticket.get_estado_display }}
+                            </span>
+                        </td>
+                        <td>{{ ticket.creado_en|date:"d/m/Y H:i" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: #7a8baa;">No hay tickets</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

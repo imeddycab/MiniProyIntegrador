@@ -13,11 +13,12 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 
 SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = True
-SESSION_COOKIE_SAMESITE = 'Strict'
+SESSION_COOKIE_SECURE = False  # False en desarrollo, True en producción
+SESSION_COOKIE_SAMESITE = 'Lax'  # Lax en desarrollo, Strict en producción
 SESSION_COOKIE_AGE = 1800
 
-LOGIN_URL = '/login/'
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'dashboard'
 
 
 
