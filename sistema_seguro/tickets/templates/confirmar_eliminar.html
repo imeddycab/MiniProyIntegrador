@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Ticket</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .delete-container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .delete-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .warning-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #86868b;
+            margin-bottom: 30px;
+        }
+
+        .ticket-info {
+            background: #f5f5f7;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .ticket-info h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #1d1d1f;
+        }
+
+        .ticket-info p {
+            color: #515154;
+            margin-bottom: 0;
+            font-size: 14px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .btn-delete {
+            background: #ff3b30;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-delete:hover {
+            background: #ff4d40;
+            transform: translateY(-1px);
+        }
+
+        .btn-cancel {
+            background: #f5f5f7;
+            color: #1d1d1f;
+            padding: 12px 24px;
+            border: 1px solid #d2d2d7;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel:hover {
+            background: #e8e8ed;
+        }
+    </style>
+</head>
+<body>
+    <div class="delete-container">
+        <div class="delete-card">
+            <div class="warning-icon">⚠️</div>
+            <h1>¿Eliminar ticket?</h1>
+            <p>Esta acción no se puede deshacer</p>
+            
+            <div class="ticket-info">
+                <h3>{{ ticket.titulo }}</h3>
+                <p>{{ ticket.descripcion|truncatechars:100 }}</p>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-actions">
+                    <button type="submit" class="btn-delete">Sí, eliminar</button>
+                    <a href="{% url 'lista_tickets' %}" class="btn-cancel">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

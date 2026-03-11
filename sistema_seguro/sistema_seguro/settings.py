@@ -12,19 +12,6 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 
-SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = False  # False en desarrollo, True en producción
-SESSION_COOKIE_SAMESITE = 'Lax'  # Lax en desarrollo, Strict en producción
-SESSION_COOKIE_AGE = 1800
-
-LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'dashboard'
-
-
-
-
-
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -50,7 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'tickets',
+    "tickets", 
 ]
 
 MIDDLEWARE = [
@@ -129,3 +116,27 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = "static/"
+
+# Configuración de sesiones seguras
+SESSION_COOKIE_HTTPONLY = True  # Evita acceso desde JavaScript
+SESSION_COOKIE_SECURE = True    # Solo enviar por HTTPS
+SESSION_COOKIE_SAMESITE = 'Strict'  # Protección contra CSRF
+SESSION_COOKIE_AGE = 1800        # 30 minutos (en segundos)
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Cerrar sesión al cerrar navegador
+
+# Para desarrollo local (si no hay HTTPS)
+# Cambia a False solo si trabajas en local sin HTTPS
+#if DEBUG:
+#    SESSION_COOKIE_SECURE = False
+
+# CSRF configuration
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SAMESITE = 'Strict'
+CSRF_COOKIE_SECURE = True
+#if DEBUG:
+#    CSRF_COOKIE_SECURE = False
+
+# URLs de autenticacion
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/login/'
